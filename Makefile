@@ -1,3 +1,6 @@
+MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+MKFILE_DIR := $(patsubst %/,%,$(dir $(MKFILE_PATH)))
+
 .DEFAULT_GOAL := tsc
 
 SHELL := /bin/bash
@@ -33,7 +36,7 @@ define tsc
 		$(call echo,$$ts not *.ts,35); \
 	else \
 		$(call echo,tsc $$ts,32); \
-		tsc $$ts; \
+		tsc $$ts || exit 1; \
 		html="$${ts%.ts}.html"; \
 		if [ -f "$$html" ]; then \
 			$(call echo,$(OPEN) $$html,32); \
