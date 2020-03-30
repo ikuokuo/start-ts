@@ -6,6 +6,7 @@ MKFILE_DIR := $(patsubst %/,%,$(dir $(MKFILE_PATH)))
 SHELL := /bin/bash
 
 TS ?=
+HTML_TEMP ?= handbook/greeter.html
 
 ifeq ($(OS),Windows_NT)
 	OPEN := start
@@ -22,7 +23,7 @@ endif
 
 define echo
 	text="$1"; options="$2"; \
-	[ -z "$$options" ] && options="1;33"; \
+	[ -z "$$options" ] && options="33"; \
 	echo -e "\033[$${options}m$${text}\033[0m"
 endef
 
@@ -37,7 +38,21 @@ define tsc
 	else \
 		$(call echo,tsc $$ts,32); \
 		tsc $$ts || exit 1; \
+	fi
+endef
+
+define open
+	ts="$1"; temp="$2"; \
+	[ -f "$$temp" ] || exit 0; \
+	js="$${ts%.ts}.js"; \
+	if [ ! -f "$$js" ]; then \
+		$(call echo,$$js not found,35); \
+	else \
 		html="$${ts%.ts}.html"; \
+		if [ -f "$$js" ]; then \
+			$(call echo,new $$html,32); \
+			sed "s/@MY_JS@/$${js##*/}/g" < $$temp > $$html; \
+		fi; \
 		if [ -f "$$html" ]; then \
 			$(call echo,$(OPEN) $$html,32); \
 			$(OPEN) $$html; \
@@ -48,7 +63,13 @@ endef
 .PHONY: tsc
 tsc:
 	@$(call tsc,$(TS))
+	@$(call open,$(TS),$(HTML_TEMP))
 
 .PHONY: clean
 clean:
-	@find . -type f -name "*.js" -print0 | xargs -0 -I {} bash -c 'echo "rm {}" && rm {}'
+	@$(call echo,clean generated *.js)
+	@find . -path ./node_modules -prune -o -type f -name "*.js" -print0 | \
+	xargs -0 -I {} bash -c 'echo "rm {}" && rm {}'
+	@$(call echo,clean generated *.html)
+	@find . \( -path ./node_modules -o -path ./handbook/*.html \) -prune -o -type f -name "*.html" -print0 | \
+	xargs -0 -I {} bash -c 'echo "rm {}" && rm {}'
