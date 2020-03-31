@@ -1,4 +1,4 @@
-// make TS=handbook/typescript-in-5-minutes/interfaces.ts
+// make TS=handbook/typescript-in-5-minutes/2_interfaces.ts
 
 interface Person {
   firstName: string;

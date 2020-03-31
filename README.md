@@ -13,7 +13,7 @@ npm install -g typescript
 ## Running your TypeScript web app
 
 ```bash
-make TS=handbook/typescript-in-5-minutes/greeter.ts
+make TS=handbook/typescript-in-5-minutes/1_greeter.ts
 ```
 
 ## References
