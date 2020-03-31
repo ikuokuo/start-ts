@@ -65,6 +65,12 @@ tsc:
 	@$(call tsc,$(TS))
 	@$(call open,$(TS),$(HTML_TEMP))
 
+.PHONY: all
+all:
+	@find . -type f -name "*.ts" ! -path "./node_modules/*" | while read -r p; do \
+		$(call tsc,$$p) \
+	done
+
 .PHONY: clean
 clean:
 	@$(call echo,clean generated *.js)
