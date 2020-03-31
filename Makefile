@@ -6,6 +6,8 @@ MKFILE_DIR := $(patsubst %/,%,$(dir $(MKFILE_PATH)))
 SHELL := /bin/bash
 
 TS ?=
+TSC_IGNORE_COMPILED ?=
+
 HTML_TEMP ?= handbook/greeter.html
 
 ifeq ($(OS),Windows_NT)
@@ -36,8 +38,13 @@ define tsc
 	elif [ "$${ts##*.}" != "ts" ]; then \
 		$(call echo,$$ts not *.ts,35); \
 	else \
-		$(call echo,tsc $$ts,32); \
-		tsc $$ts || exit 1; \
+		tsc_ignore="$2"; \
+		if [ -n "$$tsc_ignore" -a -f "$${ts%.ts}.js" ]; then \
+			$(call echo,tsc $$ts \033[33mignored\033[0m,32); \
+		else \
+			$(call echo,tsc $$ts,32); \
+			tsc $$ts || exit 1; \
+		fi \
 	fi
 endef
 
@@ -62,13 +69,13 @@ endef
 
 .PHONY: tsc
 tsc:
-	@$(call tsc,$(TS))
+	@$(call tsc,$(TS),$(TSC_IGNORE_COMPILED))
 	@$(call open,$(TS),$(HTML_TEMP))
 
 .PHONY: all
 all:
 	@find . -type f -name "*.ts" ! -path "./node_modules/*" | while read -r p; do \
-		$(call tsc,$$p) \
+		$(call tsc,$$p,$(TSC_IGNORE_COMPILED)) \
 	done
 
 .PHONY: clean
