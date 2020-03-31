@@ -1,4 +1,4 @@
-// make TS=handbook/typescript-in-5-minutes/3_classes.ts
+// make TS=handbook/typescript-in-5-minutes/3_classes.ts HTML=1
 
 class Student {
   fullName: string;

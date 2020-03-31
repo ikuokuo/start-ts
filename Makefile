@@ -8,6 +8,7 @@ SHELL := /bin/bash
 TS ?=
 TSC_IGNORE_COMPILED ?=
 
+HTML ?=
 HTML_TEMP ?= handbook/greeter.html
 
 ifeq ($(OS),Windows_NT)
@@ -48,7 +49,7 @@ define tsc
 	fi
 endef
 
-define open
+define html
 	ts="$1"; temp="$2"; \
 	[ -f "$$temp" ] || exit 0; \
 	js="$${ts%.ts}.js"; \
@@ -70,12 +71,15 @@ endef
 .PHONY: tsc
 tsc:
 	@$(call tsc,$(TS),$(TSC_IGNORE_COMPILED))
-	@$(call open,$(TS),$(HTML_TEMP))
+	@if [ -n "$(HTML)" ]; then $(call html,$(TS),$(HTML_TEMP)) fi
 
 .PHONY: all
 all:
 	@find . -type f -name "*.ts" ! -path "./node_modules/*" | while read -r p; do \
-		$(call tsc,$$p,$(TSC_IGNORE_COMPILED)) \
+		$(call tsc,$$p,$(TSC_IGNORE_COMPILED)); \
+		if [ -n "$(HTML)" ]; then \
+			$(call html,$$p,$(HTML_TEMP)); \
+		fi \
 	done
 
 .PHONY: clean

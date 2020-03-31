@@ -1,4 +1,4 @@
-// make TS=handbook/typescript-in-5-minutes/1_greeter.ts
+// make TS=handbook/typescript-in-5-minutes/1_greeter.ts HTML=1
 
 function greeter(person: string) {
   return "Hello, " + person;
