@@ -44,7 +44,7 @@ define tsc
 			$(call echo,tsc $$ts \033[33mignored\033[0m,32); \
 		else \
 			$(call echo,tsc $$ts,32); \
-			tsc $$ts || exit 1; \
+			tsc "$$ts" || exit 1; \
 		fi \
 	fi
 endef
@@ -59,11 +59,11 @@ define html
 		html="$${ts%.ts}.html"; \
 		if [ -f "$$js" ]; then \
 			$(call echo,new $$html,32); \
-			sed "s/@MY_JS@/$${js##*/}/g" < $$temp > $$html; \
+			sed "s/@MY_JS@/$${js##*/}/g" < $$temp > "$$html"; \
 		fi; \
 		if [ -f "$$html" ]; then \
 			$(call echo,$(OPEN) $$html,32); \
-			$(OPEN) $$html; \
+			$(OPEN) "$$html"; \
 		fi \
 	fi
 endef
