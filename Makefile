@@ -6,6 +6,7 @@ MKFILE_DIR := $(patsubst %/,%,$(dir $(MKFILE_PATH)))
 SHELL := /bin/bash
 
 TS ?=
+TSC_OPTIONS ?= -t ES2015
 TSC_IGNORE_COMPILED ?=
 
 HTML ?=
@@ -43,8 +44,8 @@ define tsc
 		if [ -n "$$tsc_ignore" -a -f "$${ts%.ts}.js" ]; then \
 			$(call echo,tsc $$ts \033[33mignored\033[0m,32); \
 		else \
-			$(call echo,tsc $$ts,32); \
-			tsc "$$ts" || exit 1; \
+			$(call echo,tsc $$ts $(TSC_OPTIONS),32); \
+			tsc "$$ts" $(TSC_OPTIONS) || exit 1; \
 		fi \
 	fi
 endef
@@ -86,7 +87,7 @@ all:
 clean:
 	@$(call echo,clean generated *.js)
 	@find . -path ./node_modules -prune -o -type f -name "*.js" -print0 | \
-	xargs -0 -I {} bash -c 'echo "rm {}" && rm {}'
+	xargs -0 -I {} bash -c 'echo "rm {}" && rm "{}"'
 	@$(call echo,clean generated *.html)
 	@find . \( -path ./node_modules -o -path ./handbook/*.html \) -prune -o -type f -name "*.html" -print0 | \
-	xargs -0 -I {} bash -c 'echo "rm {}" && rm {}'
+	xargs -0 -I {} bash -c 'echo "rm {}" && rm "{}"'
