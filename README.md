@@ -21,4 +21,17 @@ make TS=handbook/typescript-in-5-minutes/1_greeter.ts HTML=1
 
 ## References
 
-* [Documentation](https://www.typescriptlang.org/docs/home.html)
+* [TypeScript Handbook](https://www.typescriptlang.org/docs/home.html)
+* [TypeScript Language Specification](https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md)
+
+<!--
+git clone --depth 1 https://github.com/microsoft/TypeScript-Handbook.git
+
+cd TypeScript-Handbook/
+touch pages/README.md
+
+npm install -g gitbook-cli
+gitbook serve pages
+
+open http://localhost:4000
+-->
