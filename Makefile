@@ -7,7 +7,17 @@ SHELL := /bin/bash
 
 TS ?=
 TSC_OPTIONS ?= -t ES2015
-TSC_IGNORE_COMPILED ?=
+TSC_MODULE ?=
+TSC_IGNORE_COMPILED ?= 1
+
+ifneq ($(TSC_MODULE),)
+	TSC_OPTIONS += --module es2015
+endif
+
+TSC_EXCLUDE_FILES ?= \
+"./handbook/13\ modules/3_default-exports/1_", \
+"./handbook/13\ modules/3_default-exports/4_", \
+"./handbook/13\ modules/4_export--and-import--require/",
 
 HTML ?=
 HTML_TEMP ?= handbook/greeter.html
@@ -31,6 +41,17 @@ define echo
 	echo -e "\033[$${options}m$${text}\033[0m"
 endef
 
+define tsc_excluded
+	excluded=false; \
+	files="$(TSC_EXCLUDE_FILES)"; \
+	IFS=","; files_array=($$files); unset IFS; \
+	for file in "$${files_array[@]}"; do \
+		if [[ "$1" == "$${file## }"* ]]; then \
+			excluded=true; break; \
+		fi \
+	done
+endef
+
 define tsc
 	ts="$1"; \
 	if [ -z "$$ts" ]; then \
@@ -40,12 +61,18 @@ define tsc
 	elif [ "$${ts##*.}" != "ts" ]; then \
 		$(call echo,$$ts not *.ts,35); \
 	else \
-		tsc_ignore="$2"; \
-		if [ -n "$$tsc_ignore" -a -f "$${ts%.ts}.js" ]; then \
-			$(call echo,tsc $$ts \033[33mignored\033[0m,32); \
+		$(call tsc_excluded,$${ts}); \
+		\
+		if [ "$${excluded}" = "true" ]; then \
+			$(call echo,tsc $$ts \033[34mexcluded\033[0m,32); \
 		else \
-			$(call echo,tsc $$ts $(TSC_OPTIONS),32); \
-			tsc "$$ts" $(TSC_OPTIONS) || exit 1; \
+			tsc_ignore="$2"; \
+			if [ -n "$$tsc_ignore" -a -f "$${ts%.ts}.js" ]; then \
+				$(call echo,tsc $$ts \033[33mignored\033[0m,32); \
+			else \
+				$(call echo,tsc $$ts $(TSC_OPTIONS),32); \
+				tsc "$$ts" $(TSC_OPTIONS) || exit 1; \
+			fi \
 		fi \
 	fi
 endef
