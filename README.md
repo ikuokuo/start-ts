@@ -23,6 +23,7 @@ make TS=handbook/typescript-in-5-minutes/1_greeter.ts HTML=1
 
 * [TypeScript Handbook](https://www.typescriptlang.org/docs/home.html)
 * [TypeScript Language Specification](https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md)
+* [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
 
 <!--
 git clone --depth 1 https://github.com/microsoft/TypeScript-Handbook.git
