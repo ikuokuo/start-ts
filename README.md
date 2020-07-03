@@ -2,7 +2,7 @@
 
 [TypeScript]: https://www.typescriptlang.org/
 
-[![Status](https://img.shields.io/badge/TypeScript-3.9.2-brightgreen)](https://github.com/microsoft/TypeScript/tree/v3.9.2)
+[![Status](https://img.shields.io/badge/TypeScript-3.9.5-brightgreen)](https://github.com/microsoft/TypeScript/tree/v3.9.5)
 
 ## Installing TypeScript
 
